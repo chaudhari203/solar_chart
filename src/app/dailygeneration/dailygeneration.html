@@ -1,0 +1,26 @@
+<mat-form-field appearance="fill">
+  <mat-label>Select date or range</mat-label>
+  <mat-date-range-input [rangePicker]="picker">
+    <input matStartDate placeholder="Start date" [(ngModel)]="dateRange.begin" name="startDate" (ngModelChange)="filterData()">
+    <input matEndDate placeholder="End date" [(ngModel)]="dateRange.end" name="endDate" (ngModelChange)="filterData()">
+  </mat-date-range-input>
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-date-range-picker #picker></mat-date-range-picker>
+</mat-form-field>
+
+<div class="flex justify-center mt-4">
+  <ngx-charts-bar-vertical
+    [results]="chartData"
+    [view]="view"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [gradient]="gradient"
+    [legend]="showLegend"
+    [showXAxisLabel]="showXAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [yAxisLabel]="yAxisLabel">
+  </ngx-charts-bar-vertical>
+</div>
+
+<h2 class="text-center mt-4">Daily Energy Generation</h2>
