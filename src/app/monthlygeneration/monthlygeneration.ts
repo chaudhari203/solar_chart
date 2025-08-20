@@ -1,14 +1,45 @@
-
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import * as _moment from 'moment';
+import { default as _rollupMoment, Moment } from 'moment';
+
+const moment = _rollupMoment || _moment;
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   standalone: true,
   selector: 'app-monthlygeneration',
-  imports: [CommonModule, NgxChartsModule],
   templateUrl: './monthlygeneration.html',
-  styleUrls: ['./monthlygeneration.css']
+  styleUrls: ['./monthlygeneration.css'],
+  imports: [
+    CommonModule,
+    NgxChartsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
+  providers: [provideMomentDateAdapter(MY_FORMATS)],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Monthlygeneration implements OnInit {
   monthlyData = [
@@ -19,7 +50,6 @@ export class Monthlygeneration implements OnInit {
   ];
 
   chartData: any[] = [];
-
   view: [number, number] = [700, 400];
 
   showXAxis = true;
@@ -31,20 +61,38 @@ export class Monthlygeneration implements OnInit {
   showYAxisLabel = true;
   yAxisLabel = 'Energy (kWh)';
 
-  ngOnInit() {
-  this.chartData = [
-    {
-      name: 'Energy Generated',
-      series: this.monthlyData.map(item => ({
-        name: item.month,
-        value: item.totalenergykWh
-      }))
+  readonly date = new FormControl(moment());
+
+ngOnInit() {
+  const currentMonth = moment().format('YYYY-MM');
+  this.updateChart(currentMonth);
+}
+
+  updateChart(selectedMonth?: string) {
+    let filteredData = this.monthlyData;
+    if (selectedMonth) {
+      filteredData = this.monthlyData.filter(d => d.month === selectedMonth);
     }
-  ];
 
+    this.chartData = [
+      {
+        name: 'Energy Generated',
+        series: filteredData.map(item => ({
+          name: item.month,
+          value: item.totalenergykWh
+        }))
+      }
+    ];
+  }
+
+  setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.date.value ?? moment();
+    ctrlValue.month(normalizedMonthAndYear.month());
+    ctrlValue.year(normalizedMonthAndYear.year());
+    this.date.setValue(ctrlValue);
+    datepicker.close();
+
+    const selectedMonth = ctrlValue.format('YYYY-MM');
+    this.updateChart(selectedMonth);
+  }
 }
-
-}
-
-
-

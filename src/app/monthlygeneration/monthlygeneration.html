@@ -1,3 +1,16 @@
+<div class="flex justify-end p-4">
+
+<mat-form-field>
+  <input matInput [matDatepicker]="dp" [formControl]="date">
+  <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+  <mat-datepicker #dp
+                  startView="multi-year"
+                  (monthSelected)="setMonthAndYear($event, dp)"
+                  panelClass="example-month-picker">
+  </mat-datepicker>
+</mat-form-field>
+</div>
+
 <div class="flex justify-center">
   <ngx-charts-line-chart
     [results]="chartData"
@@ -13,4 +26,4 @@
   </ngx-charts-line-chart>
 </div>
 
-<h2 class="text-center">Monthly Energy Generation</h2>
+<h2 class="text-2xl font-bold text-center mt-6 text-blue-600">Monthly Energy Generation</h2>
