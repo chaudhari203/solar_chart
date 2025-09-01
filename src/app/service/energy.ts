@@ -6,12 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class Energy {
   constructor(private http:HttpClient){}
-  getDailyEnergyGeneration(){
-    const url ="http://localhost:3000/daily";
-    return this.http.get(url)
+  getEnergyGeneration(){
+    return this.http.get('assets/data.json')
   }
-  getMonthlyEnergyGeneration(){
-    const url ="http://localhost:3000/monthly";
-    return this.http.get(url)
-  }
+  
 }

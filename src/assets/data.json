@@ -1,0 +1,16 @@
+{
+  "daily": [
+    { "date": "2025-08-01", "energy_kWh": 124.5 },
+    { "date": "2025-08-02", "energy_kWh": 138.2 },
+    { "date": "2025-08-03", "energy_kWh": 140.2 },
+    { "date": "2025-08-04", "energy_kWh": 165.5 },
+    { "date": "2025-08-05", "energy_kWh": 170.0 },
+    { "date": "2025-09-03", "energy_kWh": 200.0 }
+  ],
+  "monthly": [
+    { "month": "2025-06", "totalenergykWh": 4283 },
+    { "month": "2025-08", "totalenergykWh": 3627 },
+    { "month": "2025-09", "totalenergykWh": 1509 },
+    { "month": "2025-10", "totalenergykWh": 6765 }
+  ]
+}

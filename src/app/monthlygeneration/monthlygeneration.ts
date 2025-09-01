@@ -1,3 +1,4 @@
+
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -8,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
+import { Energy } from '../service/energy';   // ✅ import your service
 
 const moment = _rollupMoment || _moment;
 
@@ -42,13 +44,7 @@ export const MY_FORMATS = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Monthlygeneration implements OnInit {
-  monthlyData = [
-    { month: '2025-06', totalenergykWh: 4283 },
-    { month: '2025-08', totalenergykWh: 3627 },
-    { month: '2025-09', totalenergykWh: 1509 },
-    { month: '2025-10', totalenergykWh: 6765 }
-  ];
-
+  monthlyData: any[] = [];   // ✅ now will come from JSON
   chartData: any[] = [];
   view: [number, number] = [700, 400];
 
@@ -57,19 +53,28 @@ export class Monthlygeneration implements OnInit {
   gradient = false;
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Month ';
+  xAxisLabel = 'Month';
   showYAxisLabel = true;
   yAxisLabel = 'Energy (kWh)';
 
   readonly date = new FormControl(moment());
 
-ngOnInit() {
-  const currentMonth = moment().format('YYYY-MM');
-  this.updateChart(currentMonth);
-}
+  constructor(private energy: Energy) {}
+
+  ngOnInit() {
+    this.energy.getEnergyGeneration().subscribe((res: any) => {
+      // ✅ Extract monthly part
+      this.monthlyData = res.monthly || [];
+      console.log('Monthly Data:', this.monthlyData);
+
+      const currentMonth = moment().format('YYYY-MM');
+      this.updateChart(currentMonth);
+    });
+  }
 
   updateChart(selectedMonth?: string) {
     let filteredData = this.monthlyData;
+
     if (selectedMonth) {
       filteredData = this.monthlyData.filter(d => d.month === selectedMonth);
     }
