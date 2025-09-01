@@ -1,7 +1,7 @@
 <div class="flex justify-end p-4">
 
   <mat-form-field appearance="fill">
-    <mat-date-range-input [rangePicker]="picker">
+    <mat-date-range-input [rangePicker]="picker" [separator]="dateRange.end ? '–' : ''">
       <input matStartDate placeholder="Start date" [(ngModel)]="dateRange.begin" name="startDate" (ngModelChange)="filterData()">
       <input matEndDate placeholder="End date" [(ngModel)]="dateRange.end" name="endDate" (ngModelChange)="filterData()">
     </mat-date-range-input>
